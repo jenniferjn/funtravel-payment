@@ -1,5 +1,6 @@
 package id.co.bca.funtravel.payment.controller;
 
+import id.co.bca.funtravel.payment.dto.PaymentDTO;
 import id.co.bca.funtravel.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,17 +19,17 @@ public class PaymentController {
     }
 
     @PostMapping("add")
-    public @ResponseBody Object addNewPayment() {
-        return null;
+    public @ResponseBody Object addNewPayment(@RequestBody PaymentDTO payment) {
+        return service.insert(payment);
     }
 
     @PutMapping("update")
-    public @ResponseBody Object updatePayment() {
-        return null;
+    public @ResponseBody Object updatePayment(@RequestBody PaymentDTO payment, @RequestParam("id") Integer paymentId) {
+        return service.update(payment, paymentId);
     }
 
     @DeleteMapping("delete")
-    public @ResponseBody Object deletePayment() {
-        return null;
+    public @ResponseBody Object deletePayment(@RequestParam("id") Integer paymentId) {
+        return service.delete(paymentId);
     }
 }

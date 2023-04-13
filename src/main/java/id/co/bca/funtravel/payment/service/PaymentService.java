@@ -1,14 +1,15 @@
 package id.co.bca.funtravel.payment.service;
 
-import id.co.bca.funtravel.payment.model.Payment;
+import id.co.bca.funtravel.payment.dto.PaymentDTO;
+import id.co.bca.funtravel.payment.model.PaymentModel;
 
 public interface PaymentService {
 
-    void insert(Payment payment);
+    PaymentModel insert(PaymentDTO dto);
 
-    void update(Payment payment);
+    PaymentModel update(PaymentDTO dto, Integer paymentId);
 
-    void delete(Integer paymentId);
+    String delete(Integer paymentId);
 
-    Payment getPaymentById(Integer paymentId);
+    PaymentModel getPaymentById(Integer paymentId);
 }
