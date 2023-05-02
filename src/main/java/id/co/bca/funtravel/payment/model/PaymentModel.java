@@ -21,7 +21,7 @@ public class PaymentModel {
     private Integer order;
 
     @Column(name = "total_amount")
-    private String totalAmount;
+    private Integer totalAmount;
 
     @Column(name = "method")
     private String method;

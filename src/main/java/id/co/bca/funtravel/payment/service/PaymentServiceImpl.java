@@ -1,6 +1,8 @@
 package id.co.bca.funtravel.payment.service;
 
 import id.co.bca.funtravel.payment.dto.PaymentDTO;
+import id.co.bca.funtravel.payment.kafka.ProducerService;
+import id.co.bca.funtravel.payment.model.CustomerModel;
 import id.co.bca.funtravel.payment.model.PaymentModel;
 import id.co.bca.funtravel.payment.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +18,31 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     PaymentRepository repository;
 
+    @Autowired
+    WebclientService webclient;
+
+    @Autowired
+    ProducerService producer;
+
     @Override
-    public PaymentModel insert(PaymentDTO dto) {
+    public PaymentModel insert(PaymentDTO dto, Integer customerId, String email, String password) {
+        CustomerModel customer = webclient.getCustomerData(customerId, email, password);
+
+        if (customer == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid User!");
+        }
+
+        if (customer.getBalance() > dto.getTotalAmount()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Insuffient Balance!");
+        }
+
         PaymentModel model = new PaymentModel();
         model.setOrder(dto.getOrderId());
         model.setTotalAmount(dto.getTotalAmount());
         model.setMethod(dto.getMethod());
         model.setStatus(dto.getStatus());
         model.setDate(new Date(dto.getDate()));
+
         return repository.save(model);
     }
 
@@ -35,6 +54,10 @@ public class PaymentServiceImpl implements PaymentService {
         model.setMethod(dto.getMethod());
         model.setStatus(dto.getStatus());
         model.setDate(new Date(dto.getDate()));
+
+        if (model.getStatus().equals("complete")) {
+            producer.sendMessage(model.getTotalAmount().toString());
+        }
         return repository.save(model);
     }
 

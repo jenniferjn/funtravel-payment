@@ -11,7 +11,7 @@ import lombok.Setter;
 public class PaymentDTO {
 
     private Integer orderId;
-    private String totalAmount;
+    private Integer totalAmount;
     private String method;
     private String status;
     private Long date;
