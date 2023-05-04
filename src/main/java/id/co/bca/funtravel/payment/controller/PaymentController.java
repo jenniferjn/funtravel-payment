@@ -32,8 +32,9 @@ public class PaymentController {
     }
 
     @PutMapping("update")
-    public @ResponseBody Object updatePayment(@RequestBody PaymentDTO payment, @RequestParam("id") Integer paymentId) {
-        return service.update(payment, paymentId);
+    public @ResponseBody Object updatePayment(@RequestBody PaymentDTO payment, @RequestParam("id") Integer paymentId, @RequestParam("user") Integer customerId) {
+        System.out.println(payment);
+        return service.update(payment, paymentId, customerId);
     }
 
     @DeleteMapping("delete")

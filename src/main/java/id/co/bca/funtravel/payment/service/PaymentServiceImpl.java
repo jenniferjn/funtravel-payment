@@ -1,6 +1,9 @@
 package id.co.bca.funtravel.payment.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import id.co.bca.funtravel.payment.dto.PaymentDTO;
+import id.co.bca.funtravel.payment.dto.TransferDTO;
 import id.co.bca.funtravel.payment.kafka.ProducerService;
 import id.co.bca.funtravel.payment.model.CustomerModel;
 import id.co.bca.funtravel.payment.model.PaymentModel;
@@ -47,8 +50,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentModel update(PaymentDTO dto, Integer paymentId) {
+    public PaymentModel update(PaymentDTO dto, Integer paymentId, Integer customerId) {
+
         PaymentModel model = repository.findPaymentById(paymentId);
+        System.out.println(dto);
         model.setOrder(dto.getOrderId());
         model.setTotalAmount(dto.getTotalAmount());
         model.setMethod(dto.getMethod());
@@ -56,7 +61,10 @@ public class PaymentServiceImpl implements PaymentService {
         model.setDate(new Date(dto.getDate()));
 
         if (model.getStatus().equals("complete")) {
-            producer.sendMessage(model.getTotalAmount().toString());
+            TransferDTO transferDTO = new TransferDTO(customerId, model.getTotalAmount());
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonDto = mapper.convertValue(transferDTO, JsonNode.class);
+            producer.sendMessage(jsonDto.toString());
         }
         return repository.save(model);
     }

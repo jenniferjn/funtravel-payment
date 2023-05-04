@@ -7,7 +7,7 @@ public interface PaymentService {
 
     PaymentModel insert(PaymentDTO dto, Integer customerId, String email, String password);
 
-    PaymentModel update(PaymentDTO dto, Integer paymentId);
+    PaymentModel update(PaymentDTO dto, Integer paymentId, Integer customerId);
 
     String delete(Integer paymentId);
 
