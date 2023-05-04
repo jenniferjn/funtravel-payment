@@ -24,7 +24,11 @@ public class PaymentController {
     @PostMapping("add")
     public @ResponseBody Object addNewPayment(ServletRequest servletRequest, @RequestBody PaymentDTO payment) {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        return service.insert(payment, Integer.parseInt(request.getHeader("user")), request.getHeader("email"), request.getHeader("password"));
+        try {
+            return service.insert(payment, Integer.parseInt(request.getHeader("user")), request.getHeader("email"), request.getHeader("password"));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @PutMapping("update")

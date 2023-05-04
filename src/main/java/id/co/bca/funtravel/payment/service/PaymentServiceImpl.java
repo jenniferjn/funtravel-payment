@@ -32,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid User!");
         }
 
-        if (customer.getBalance() > dto.getTotalAmount()) {
+        if (customer.getBalance() < dto.getTotalAmount()) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Insuffient Balance!");
         }
 
